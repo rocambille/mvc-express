@@ -14,13 +14,19 @@ class ItemController {
   }
 
   browse = async (request, response) => {
-    await database.item.findAll();
+    const items = await database.item.findAll();
 
-    response.send("browse");
+    response.send(items);
   };
 
   read = async (request, response) => {
-    response.send("read");
+    const item = await database.item.find(request.params.id);
+
+    if (item == null) {
+      response.sendStatus(404);
+    } else {
+      response.send(item);
+    }
   };
 
   edit = async (request, response) => {

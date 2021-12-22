@@ -1,8 +1,28 @@
 const fs = require("fs");
+const mysql = require("mysql2/promise");
 
-const database = fs.readdirSync("./src/models").reduce((acc, file) => {
-  const Model = require("./src/models/" + file);
-  return { ...acc, [Model.table]: new Model() };
-}, {});
+const fillDatabase = async (database) => {
+  const connection = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    multipleStatements: true,
+  });
+
+  return fs.readdirSync("./src/models").forEach((file) => {
+    const Model = require("./src/models/" + file);
+
+    database[Model.table] = new Model(connection);
+  });
+};
+
+const database = {};
+
+try {
+  fillDatabase(database);
+} catch (err) {
+  console.log(err);
+}
 
 module.exports = database;
