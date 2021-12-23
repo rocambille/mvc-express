@@ -1,16 +1,16 @@
-const express = require("express");
+const AbstractController = require("./AbstractController");
+
 const database = require("../../database");
 
-class ItemController {
-  path = "/items";
-  router = express.Router();
-
+class ItemController extends AbstractController {
   constructor() {
-    this.router.get(this.path, this.browse);
-    this.router.get(this.path + "/:id", this.read);
-    this.router.put(this.path + "/:id", this.edit);
-    this.router.post(this.path, this.add);
-    this.router.delete(this.path + "/:id", this.delete);
+    super();
+
+    this.router.get("/items", this.browse);
+    this.router.get("/items/:id", this.read);
+    this.router.put("/items/:id", this.edit);
+    this.router.post("/items", this.add);
+    this.router.delete("/items/:id", this.delete);
   }
 
   browse = async (request, response) => {

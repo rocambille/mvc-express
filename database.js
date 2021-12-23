@@ -10,11 +10,14 @@ const fillDatabase = async (database) => {
     multipleStatements: true,
   });
 
-  return fs.readdirSync("./src/models").forEach((file) => {
-    const Model = require("./src/models/" + file);
+  return fs
+    .readdirSync("./src/models")
+    .filter((file) => file !== "AbstractManager.js")
+    .forEach((file) => {
+      const Model = require("./src/models/" + file);
 
-    database[Model.table] = new Model(connection);
-  });
+      database[Model.table] = new Model(connection);
+    });
 };
 
 const database = {};
