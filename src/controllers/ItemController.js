@@ -10,7 +10,7 @@ class ItemController {
     this.router.get(this.path + "/:id", this.read);
     this.router.put(this.path + "/:id", this.edit);
     this.router.post(this.path, this.add);
-    this.router.delete(this.path, this.delete);
+    this.router.delete(this.path + "/:id", this.delete);
   }
 
   browse = async (request, response) => {
@@ -30,15 +30,35 @@ class ItemController {
   };
 
   edit = async (request, response) => {
-    response.send("edit");
+    const item = request.body;
+
+    // TODO validations (length, format...)
+
+    item.id = request.params.id;
+
+    const success = await database.item.update(item);
+
+    if (success) {
+      response.send(item);
+    } else {
+      response.sendStatus(500);
+    }
   };
 
   add = async (request, response) => {
-    response.send("add");
+    const item = request.body;
+
+    // TODO validations (length, format...)
+
+    const id = await database.item.insert(item);
+
+    response.send({ ...item, id });
   };
 
   delete = async (request, response) => {
-    response.send("delete");
+    await database.item.delete(request.params.id);
+
+    response.sendStatus(204);
   };
 }
 
