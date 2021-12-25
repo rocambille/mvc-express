@@ -7,7 +7,8 @@ const controllers = fs
   .readdirSync("./src/controllers")
   .filter((file) => file !== "AbstractController.js")
   .map((file) => {
-    const Controller = require("./src/controllers/" + file);
+    const Controller = require(`./src/controllers/${file}`);
+
     return new Controller();
   });
 
