@@ -17,7 +17,7 @@ const fillDatabase = async (database) => {
     .forEach((file) => {
       const Manager = require(`./src/models/${file}`);
 
-      database[Manager.table] = new Manager(connection);
+      database[Manager.table] = new Manager(connection, Manager.table);
     });
 };
 
