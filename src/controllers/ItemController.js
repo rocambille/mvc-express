@@ -34,7 +34,7 @@ class ItemController extends AbstractController {
 
     // TODO validations (length, format...)
 
-    item.id = request.params.id;
+    item.id = parseInt(request.params.id);
 
     const success = await database.item.update(item);
 
