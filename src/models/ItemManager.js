@@ -4,14 +4,14 @@ class ItemManager extends AbstractManager {
   static table = "item";
 
   insert(item) {
-    return this.connection.execute(
+    return this.connection.query(
       `insert into ${ItemManager.table} (title) values (?)`,
       [item.title]
     );
   }
 
   update(item) {
-    return this.connection.execute(
+    return this.connection.query(
       `update ${ItemManager.table} set title = ? where id = ?`,
       [item.title, item.id]
     );
