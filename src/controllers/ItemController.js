@@ -1,5 +1,4 @@
 const AbstractController = require("./AbstractController");
-
 const database = require("../../database");
 
 class ItemController extends AbstractController {
@@ -13,52 +12,82 @@ class ItemController extends AbstractController {
     this.router.delete("/items/:id", this.delete);
   }
 
-  browse = async (request, response) => {
-    const items = await database.item.findAll();
-
-    response.send(items);
+  browse = (request, response) => {
+    database.item
+      .findAll()
+      .then(([rows]) => {
+        response.send(rows);
+      })
+      .catch((err) => {
+        console.error(err);
+        response.sendStatus(500);
+      });
   };
 
-  read = async (request, response) => {
-    const item = await database.item.find(request.params.id);
-
-    if (item == null) {
-      response.sendStatus(404);
-    } else {
-      response.send(item);
-    }
+  read = (request, response) => {
+    database.item
+      .find(request.params.id)
+      .then(([rows]) => {
+        if (rows[0] == null) {
+          response.sendStatus(404);
+        } else {
+          response.send(rows[0]);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        response.sendStatus(500);
+      });
   };
 
-  edit = async (request, response) => {
+  edit = (request, response) => {
     const item = request.body;
 
     // TODO validations (length, format...)
 
     item.id = parseInt(request.params.id);
 
-    const success = await database.item.update(item);
-
-    if (success) {
-      response.send(item);
-    } else {
-      response.sendStatus(500);
-    }
+    database.item
+      .update(item)
+      .then(([result]) => {
+        if (result.affectedRows === 1) {
+          response.sendStatus(204);
+        } else {
+          response.sendStatus(500);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        response.sendStatus(500);
+      });
   };
 
-  add = async (request, response) => {
+  add = (request, response) => {
     const item = request.body;
 
     // TODO validations (length, format...)
 
-    const id = await database.item.insert(item);
-
-    response.send({ ...item, id });
+    database.item
+      .insert(item)
+      .then(([result]) => {
+        response.status(201).send({ ...item, id: result.insertId });
+      })
+      .catch((err) => {
+        console.error(err);
+        response.sendStatus(500);
+      });
   };
 
-  delete = async (request, response) => {
-    await database.item.delete(request.params.id);
-
-    response.sendStatus(204);
+  delete = (request, response) => {
+    database.item
+      .delete(request.params.id)
+      .then(() => {
+        response.sendStatus(204);
+      })
+      .catch((err) => {
+        console.error(err);
+        response.sendStatus(500);
+      });
   };
 }
 

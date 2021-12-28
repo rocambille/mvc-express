@@ -4,23 +4,18 @@ class AbstractManager {
     this.table = table;
   }
 
-  async find(id) {
-    const [rows] = await this.connection.execute(
-      `select * from  ${this.table} where id = ?`,
-      [id]
-    );
-
-    return rows[0];
+  find(id) {
+    return this.connection.query(`select * from  ${this.table} where id = ?`, [
+      id,
+    ]);
   }
 
-  async findAll() {
-    const [rows] = await this.connection.query(`select * from  ${this.table}`);
-
-    return rows;
+  findAll() {
+    return this.connection.query(`select * from  ${this.table}`);
   }
 
-  async delete(id) {
-    await this.connection.execute(`delete from ${this.table} where id = ?`, [
+  delete(id) {
+    return this.connection.query(`delete from ${this.table} where id = ?`, [
       id,
     ]);
   }
