@@ -3,22 +3,20 @@ const AbstractManager = require("./AbstractManager");
 class ItemManager extends AbstractManager {
   static table = "item";
 
-  async insert(item) {
-    const [results] = await this.connection.execute(
+  insert(itemPropsToInsert, callback) {
+    this.connection.query(
       `insert into ${ItemManager.table} (title) values (?)`,
-      [item.title]
+      [itemPropsToInsert.title],
+      (err, result) => callback(err, result?.insertId)
     );
-
-    return results.insertId;
   }
 
-  async update(item) {
-    const [results] = await this.connection.execute(
-      `update ${ItemManager.table} set title = ? where id = ?`,
-      [item.title, item.id]
+  update(id, itemPropsToUpdate, callback) {
+    this.connection.query(
+      `update ${ItemManager.table} set ? where id = ?`,
+      [itemPropsToUpdate, id],
+      (err, result) => callback(err, result?.affectedRows)
     );
-
-    return results.affectedRows === 1;
   }
 }
 

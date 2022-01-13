@@ -13,52 +13,77 @@ class ItemController extends AbstractController {
     this.router.delete("/items/:id", this.delete);
   }
 
-  browse = async (request, response) => {
-    const items = await database.item.findAll();
-
-    response.send(items);
+  browse = (req, res) => {
+    database.item.findAll((err, items) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else {
+        res.send(items);
+      }
+    });
   };
 
-  read = async (request, response) => {
-    const item = await database.item.find(request.params.id);
+  read = (req, res) => {
+    const itemId = parseInt(req.params.id);
 
-    if (item == null) {
-      response.sendStatus(404);
-    } else {
-      response.send(item);
-    }
+    database.item.find(itemId, (err, item) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else if (item == null) {
+        res.sendStatus(404);
+      } else {
+        res.send(item);
+      }
+    });
   };
 
-  edit = async (request, response) => {
-    const item = request.body;
+  edit = (req, res) => {
+    const itemId = parseInt(req.params.id);
+    const itemPropsToUpdate = req.body;
 
     // TODO validations (length, format...)
 
-    item.id = parseInt(request.params.id);
-
-    const success = await database.item.update(item);
-
-    if (success) {
-      response.send(item);
-    } else {
-      response.sendStatus(500);
-    }
+    database.item.update(itemId, itemPropsToUpdate, (err, affectedRows) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else if (affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        res.sendStatus(204);
+      }
+    });
   };
 
-  add = async (request, response) => {
-    const item = request.body;
+  add = (req, res) => {
+    const itemPropsToInsert = req.body;
 
     // TODO validations (length, format...)
 
-    const id = await database.item.insert(item);
-
-    response.send({ ...item, id });
+    database.item.insert(itemPropsToInsert, (err, insertId) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else {
+        const createdItem = { id: insertId, ...itemPropsToInsert };
+        res.status(201).send(createdItem);
+      }
+    });
   };
 
-  delete = async (request, response) => {
-    await database.item.delete(request.params.id);
+  delete = (req, res) => {
+    const itemId = parseInt(req.params.id);
 
-    response.sendStatus(204);
+    database.item.delete(itemId, (err, result) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(204);
+      }
+    });
   };
 }
 
