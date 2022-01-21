@@ -50,10 +50,10 @@ class ItemController extends AbstractController {
     database.item
       .update(item)
       .then(([result]) => {
-        if (result.affectedRows === 1) {
-          response.sendStatus(204);
+        if (result.affectedRows === 0) {
+          response.sendStatus(404);
         } else {
-          response.sendStatus(500);
+          response.sendStatus(204);
         }
       })
       .catch((err) => {
