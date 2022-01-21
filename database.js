@@ -1,5 +1,6 @@
 const fs = require("fs");
 const mysql = require("mysql2/promise");
+const path = require("path");
 
 const fillDatabase = async (database) => {
   const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -11,11 +12,10 @@ const fillDatabase = async (database) => {
     database: DB_NAME,
   });
 
-  return fs
-    .readdirSync("./src/models")
+  fs.readdirSync(path.join(__dirname, "src/models"))
     .filter((file) => file !== "AbstractManager.js")
     .forEach((file) => {
-      const Manager = require(`./src/models/${file}`);
+      const Manager = require(path.join(__dirname, "src/models", file));
 
       database[Manager.table] = new Manager(connection, Manager.table);
     });

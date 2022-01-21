@@ -1,19 +1,13 @@
 require("dotenv").config();
 
-const fs = require("fs");
-const App = require("./src/App");
-
-const controllers = fs
-  .readdirSync("./src/controllers")
-  .filter((file) => file !== "AbstractController.js")
-  .map((file) => {
-    const Controller = require(`./src/controllers/${file}`);
-
-    return new Controller();
-  });
+const app = require("./src/app");
 
 const port = parseInt(process.env.APP_PORT ?? "5000");
 
-const app = new App(controllers, port);
-
-app.listen();
+app.listen(port, (err) => {
+  if (err) {
+    console.error("Something bad happened");
+  } else {
+    console.log(`Server is listening on ${port}`);
+  }
+});
