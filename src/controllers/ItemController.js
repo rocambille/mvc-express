@@ -12,81 +12,81 @@ class ItemController extends AbstractController {
     this.router.delete("/items/:id", this.delete);
   }
 
-  browse = (request, response) => {
+  browse = (req, res) => {
     database.item
       .findAll()
       .then(([rows]) => {
-        response.send(rows);
+        res.send(rows);
       })
       .catch((err) => {
         console.error(err);
-        response.sendStatus(500);
+        res.sendStatus(500);
       });
   };
 
-  read = (request, response) => {
+  read = (req, res) => {
     database.item
-      .find(request.params.id)
+      .find(req.params.id)
       .then(([rows]) => {
         if (rows[0] == null) {
-          response.sendStatus(404);
+          res.sendStatus(404);
         } else {
-          response.send(rows[0]);
+          res.send(rows[0]);
         }
       })
       .catch((err) => {
         console.error(err);
-        response.sendStatus(500);
+        res.sendStatus(500);
       });
   };
 
-  edit = (request, response) => {
-    const item = request.body;
+  edit = (req, res) => {
+    const item = req.body;
 
     // TODO validations (length, format...)
 
-    item.id = parseInt(request.params.id);
+    item.id = parseInt(req.params.id);
 
     database.item
       .update(item)
       .then(([result]) => {
         if (result.affectedRows === 0) {
-          response.sendStatus(404);
+          res.sendStatus(404);
         } else {
-          response.sendStatus(204);
+          res.sendStatus(204);
         }
       })
       .catch((err) => {
         console.error(err);
-        response.sendStatus(500);
+        res.sendStatus(500);
       });
   };
 
-  add = (request, response) => {
-    const item = request.body;
+  add = (req, res) => {
+    const item = req.body;
 
     // TODO validations (length, format...)
 
     database.item
       .insert(item)
       .then(([result]) => {
-        response.status(201).send({ ...item, id: result.insertId });
+        res.status(201).send({ ...item, id: result.insertId });
       })
       .catch((err) => {
         console.error(err);
-        response.sendStatus(500);
+        res.sendStatus(500);
       });
   };
 
-  delete = (request, response) => {
+  delete = (req, res) => {
     database.item
-      .delete(request.params.id)
+      .delete(req.params.id)
       .then(() => {
-        response.sendStatus(204);
+        res.sendStatus(204);
       })
       .catch((err) => {
         console.error(err);
-        response.sendStatus(500);
+        res.sendStatus(500);
       });
   };
 }
