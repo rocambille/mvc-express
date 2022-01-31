@@ -17,7 +17,7 @@ DB_PASSWORD=your_db_password
 DB_NAME=your_db_name
 ```
 
-4. Import _database.sql_ in your SQL server, you can do it manually or run _migrate_ script (either using `npm run migrate` or `yarn run migrate`).
+4. Adapt _database.sql_ with your own tables. Import the script in your SQL server. You can do it manually or run _migrate_ script (either using `npm run migrate` or `yarn run migrate`).
 5. Start the server in dev mode with `npm run dev` or `yarn run dev`. This will run `index.js` using _nodemon_.
 6. Go to `localhost:5000` with your favorite browser.
 7. From this starter kit, create your own web application.
@@ -39,4 +39,4 @@ An example (a basic list of items) is provided (you can load the _database.sql_ 
 - Item add: POST localhost:5000/items
 - Item deletion: DELETE localhost:5000/items/:id
 
-You can find all these routes declared in the file `src/controllers/ItemController.js`. You can add your own new routes by creating more controllers.
+You can find all these routes declared in the file `src/router.js`. You can add your own new routes, controllers and models.
