@@ -1,36 +1,20 @@
 const express = require("express");
-const fs = require("fs");
 const path = require("path");
 
 // let's create express app
 
 const app = express();
 
-// add your application-level middlewares in the list below
+// use some application-level middlewares
 
-const middlewares = [
-  express.json(),
-  express.static(path.join(__dirname, "..", "public")),
-];
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "../public")));
 
-for (const middleware of middlewares) {
-  app.use(middleware);
-}
+// load routes
 
-// controllers are created from the files in /src/controllers
+const router = require("./router");
 
-const controllers = fs
-  .readdirSync(path.join(__dirname, "controllers"))
-  .filter((file) => file !== "AbstractController.js" && file !== "index.js")
-  .map((file) => {
-    const Controller = require(path.join(__dirname, "controllers", file));
-
-    return new Controller();
-  });
-
-for (const controller of controllers) {
-  app.use("/", controller.router);
-}
+app.use("/", router);
 
 // ready to export
 

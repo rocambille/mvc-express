@@ -1,17 +1,6 @@
-const AbstractController = require("./AbstractController");
 const models = require("../models");
 
-class ItemController extends AbstractController {
-  constructor() {
-    super();
-
-    this.router.get("/items", this.browse);
-    this.router.get("/items/:id", this.read);
-    this.router.put("/items/:id", this.edit);
-    this.router.post("/items", this.add);
-    this.router.delete("/items/:id", this.delete);
-  }
-
+class ItemController {
   browse = (req, res) => {
     models.item
       .findAll()

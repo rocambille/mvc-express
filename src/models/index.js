@@ -29,4 +29,20 @@ try {
   console.log(err);
 }
 
-module.exports = models;
+const handler = {
+  get: function (obj, prop) {
+    if (prop in obj) {
+      return obj[prop];
+    } else {
+      const pascalize = (string) =>
+        string.slice(0, 1).toUpperCase() + string.slice(1);
+      throw new ReferenceError(
+        `models.${prop} is not defined. Did you create ${pascalize(
+          prop
+        )}Manager.js?`
+      );
+    }
+  },
+};
+
+module.exports = new Proxy(models, handler);
