@@ -21,7 +21,7 @@ for (const middleware of middlewares) {
 
 const controllers = fs
   .readdirSync(path.join(__dirname, "controllers"))
-  .filter((file) => file !== "AbstractController.js")
+  .filter((file) => file !== "AbstractController.js" && file !== "index.js")
   .map((file) => {
     const Controller = require(path.join(__dirname, "controllers", file));
 

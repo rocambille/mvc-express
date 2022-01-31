@@ -2,7 +2,7 @@ const fs = require("fs");
 const mysql = require("mysql2/promise");
 const path = require("path");
 
-const fillDatabase = async (database) => {
+const load = async (models) => {
   const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
   const connection = await mysql.createConnection({
@@ -12,21 +12,21 @@ const fillDatabase = async (database) => {
     database: DB_NAME,
   });
 
-  fs.readdirSync(path.join(__dirname, "src/models"))
-    .filter((file) => file !== "AbstractManager.js")
+  fs.readdirSync(__dirname)
+    .filter((file) => file !== "AbstractManager.js" && file !== "index.js")
     .forEach((file) => {
-      const Manager = require(path.join(__dirname, "src/models", file));
+      const Manager = require(path.join(__dirname, file));
 
-      database[Manager.table] = new Manager(connection, Manager.table);
+      models[Manager.table] = new Manager(connection, Manager.table);
     });
 };
 
-const database = {};
+const models = {};
 
 try {
-  fillDatabase(database);
+  load(models);
 } catch (err) {
   console.log(err);
 }
 
-module.exports = database;
+module.exports = models;

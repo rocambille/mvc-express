@@ -1,5 +1,5 @@
 const AbstractController = require("./AbstractController");
-const database = require("../../database");
+const models = require("../models");
 
 class ItemController extends AbstractController {
   constructor() {
@@ -13,7 +13,7 @@ class ItemController extends AbstractController {
   }
 
   browse = (req, res) => {
-    database.item
+    models.item
       .findAll()
       .then(([rows]) => {
         res.send(rows);
@@ -25,7 +25,7 @@ class ItemController extends AbstractController {
   };
 
   read = (req, res) => {
-    database.item
+    models.item
       .find(req.params.id)
       .then(([rows]) => {
         if (rows[0] == null) {
@@ -47,7 +47,7 @@ class ItemController extends AbstractController {
 
     item.id = parseInt(req.params.id);
 
-    database.item
+    models.item
       .update(item)
       .then(([result]) => {
         if (result.affectedRows === 0) {
@@ -67,7 +67,7 @@ class ItemController extends AbstractController {
 
     // TODO validations (length, format...)
 
-    database.item
+    models.item
       .insert(item)
       .then(([result]) => {
         res.status(201).send({ ...item, id: result.insertId });
@@ -79,7 +79,7 @@ class ItemController extends AbstractController {
   };
 
   delete = (req, res) => {
-    database.item
+    models.item
       .delete(req.params.id)
       .then(() => {
         res.sendStatus(204);
