@@ -19,7 +19,7 @@ const controllers = fs
   }, {});
 
 const handler = {
-  get (obj, prop) {
+  get(obj, prop) {
     if (prop in obj) {
       return obj[prop];
     }
