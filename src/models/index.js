@@ -8,7 +8,7 @@ const path = require("path");
 const load = async (models) => {
   const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
-  const connection = await mysql.createConnection({
+  const connection = await mysql.createPool({
     host: DB_HOST,
     user: DB_USER,
     password: DB_PASSWORD,
