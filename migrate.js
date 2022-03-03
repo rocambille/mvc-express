@@ -13,9 +13,9 @@ const migrate = async () => {
     multipleStatements: true,
   });
 
-  await connection.query(`DROP DATABASE IF EXISTS ${DB_NAME}`);
-  await connection.query(`CREATE DATABASE ${DB_NAME}`);
-  await connection.query(`USE ${DB_NAME}`);
+  await connection.query(`DROP DATABASE IF EXISTS \`${DB_NAME}\``);
+  await connection.query(`CREATE DATABASE \`${DB_NAME}\``);
+  await connection.query(`USE \`${DB_NAME}\``);
 
   const sql = fs.readFileSync("./database.sql", "utf8");
 
