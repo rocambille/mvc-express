@@ -9,5 +9,10 @@ app.listen(port, (err) => {
     console.error("Something bad happened");
   } else {
     console.log(`Server is listening on ${port}`);
+
+    if (process.env.ENV?.toLowerCase() === "prod") {
+      // eslint-disable-next-line global-require
+      require("./migrate");
+    }
   }
 });
