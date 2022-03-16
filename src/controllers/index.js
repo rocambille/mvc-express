@@ -1,3 +1,6 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
+/* eslint-disable no-shadow */
 const fs = require("fs");
 const path = require("path");
 
@@ -16,18 +19,17 @@ const controllers = fs
   }, {});
 
 const handler = {
-  get: function (obj, prop) {
+  get(obj, prop) {
     if (prop in obj) {
       return obj[prop];
-    } else {
-      const pascalize = (string) =>
-        string.slice(0, 1).toUpperCase() + string.slice(1);
-      throw new ReferenceError(
-        `controllers.${prop} is not defined. Did you create ${pascalize(
-          prop
-        )}Controller.js?`
-      );
     }
+    const pascalize = (string) =>
+      string.slice(0, 1).toUpperCase() + string.slice(1);
+    throw new ReferenceError(
+      `controllers.${prop} is not defined. Did you create ${pascalize(
+        prop
+      )}Controller.js?`
+    );
   },
 };
 
